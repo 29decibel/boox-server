@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title>Running Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10 and IE 11 */
+            user-select: none; /* Standard syntax */
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: white;
+            height: 100vh;
+            padding: 16px;
+            color: black;
+            overflow: hidden;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 1fr;
+            gap: 16px;
+            height: calc(100vh - 32px);
+        }
+
+        .tile {
+            background: white;
+            border: 2px solid black;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .tile-header {
+            border-bottom: 2px solid black;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        /* Activity Calendar (Heatmap) */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            font-size: 0.7rem;
+            text-align: center;
+        }
+
+        .calendar-header {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            border: 1px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .activity-none {
+            background: white;
+        }
+
+        .activity-light {
+            background: repeating-linear-gradient(45deg, black, black 1px, white 1px, white 4px);
+        }
+
+        .activity-medium {
+            background: repeating-linear-gradient(45deg, black, black 1px, white 1px, white 2px);
+        }
+
+        .activity-high {
+            background: black;
+            color: white;
+        }
+
+        /* Stats Grid */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            flex: 1;
+        }
+
+        .stat-box {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+
+        /* Race Countdown */
+        .countdown {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .countdown-value {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        /* Last Run Details */
+        .run-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .detail-value {
+            font-weight: bold;
+        }
+
+        /* Weekly Summary */
+        .weekly-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 100px;
+            margin-top: 8px;
+        }
+
+        .bar {
+            width: 12%;
+            background: black;
+            position: relative;
+        }
+
+        .bar-label {
+            position: absolute;
+            top: -20px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+            /* Monthly Goals */
+        .goal-progress {
+            text-align: center;
+            padding: 8px 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .goal-main-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 4px 0;
+        }
+
+        .goal-progress-bar {
+            margin: 8px 0;
+            border: 1px solid black;
+            height: 12px;
+        }
+
+        .goal-progress-fill {
+            height: 100%;
+            background: black;
+        }
+
+        .goal-stats {
+            font-size: 0.8rem;
+            line-height: 1.2;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-grid">
+      <!-- Monthly Activity Heatmap -->
+<div class="tile" style="grid-column: span 2;">
+    <div class="tile-header">February 2025 Activity</div>
+    <div class="calendar-grid">
+        <div class="calendar-header">M</div>
+        <div class="calendar-header">T</div>
+        <div class="calendar-header">W</div>
+        <div class="calendar-header">T</div>
+        <div class="calendar-header">F</div>
+        <div class="calendar-header">S</div>
+        <div class="calendar-header">S</div>
+        
+        <!-- Previous month (January) days -->
+        <div class="calendar-day activity-none"></div>
+        <div class="calendar-day activity-none"></div>
+        <div class="calendar-day activity-none"></div>
+        <div class="calendar-day activity-none"></div>
+        <div class="calendar-day activity-none"></div>
+        
+        <!-- February days -->
+        <div class="calendar-day activity-high">1</div>
+        <div class="calendar-day activity-medium">2</div>
+        <div class="calendar-day activity-light">3</div>
+        <div class="calendar-day activity-medium">4</div>
+        <div class="calendar-day activity-high">5</div>
+        <div class="calendar-day activity-none">6</div>
+        <div class="calendar-day activity-none">7</div>
+        <div class="calendar-day activity-light">8</div>
+        <div class="calendar-day activity-medium">9</div>
+        <div class="calendar-day activity-light">10</div>
+        <div class="calendar-day activity-medium">11</div>
+        <div class="calendar-day activity-high">12</div>
+        <div class="calendar-day activity-none">13</div>
+        <div class="calendar-day activity-none">14</div>
+        <div class="calendar-day activity-medium">15</div>
+        <div class="calendar-day activity-light">16</div>
+        <div class="calendar-day activity-high">17</div>
+        <div class="calendar-day activity-medium">18</div>
+        <div class="calendar-day activity-light">19</div>
+        <div class="calendar-day activity-medium">20</div>
+        <div class="calendar-day activity-none">21</div>
+        <div class="calendar-day activity-none">22</div>
+        <div class="calendar-day activity-high">23</div>
+        <div class="calendar-day activity-medium">24</div>
+        <div class="calendar-day activity-light">25</div>
+        <div class="calendar-day activity-medium">26</div>
+        <div class="calendar-day activity-high">27</div>
+        <div class="calendar-day activity-none">28</div>
+        
+        <!-- Next month (March) days -->
+        <div class="calendar-day activity-none"></div>
+        <div class="calendar-day activity-none"></div>
+    </div>
+</div>
+
+        <!-- Race Countdown -->
+        <div class="tile">
+            <div class="tile-header">Boston Marathon</div>
+            <div class="countdown">
+                <div class="countdown-value">75</div>
+                <div class="countdown-label">DAYS TO RACE</div>
+            </div>
+        </div>
+
+        <!-- This Week's Stats -->
+        <div class="tile">
+            <div class="tile-header">This Week</div>
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-value">23.5</div>
+                    <div class="stat-label">MILES</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">3:45</div>
+                    <div class="stat-label">HOURS</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">1,250</div>
+                    <div class="stat-label">ELEV (FT)</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">RUNS</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Last Run Details -->
+        <div class="tile">
+            <div class="tile-header">Last Run (Today 7:30 AM)</div>
+            <div class="run-details">
+                <div class="detail-item">
+                    <div class="detail-value">6.2 mi</div>
+                    <div>Distance</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-value">52:30</div>
+                    <div>Duration</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-value">8:27</div>
+                    <div>Pace</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-value">320</div>
+                    <div>Elev Gain</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Heart Rate Zones -->
+        <div class="tile">
+            <div class="tile-header">Training Zones</div>
+            <div style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>Zone 5 (>175)</span>
+                    <span>3%</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>Zone 4 (165-174)</span>
+                    <span>12%</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>Zone 3 (150-164)</span>
+                    <span>25%</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>Zone 2 (135-149)</span>
+                    <span>45%</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>Zone 1 (<135)</span>
+                    <span>15%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Goals -->
+        <div class="tile">
+            <div class="tile-header">Monthly Goals</div>
+            <div class="goal-progress">
+                <div>
+                    <div class="goal-main-value">78.5</div>
+                    <div class="stat-label">of 100 miles</div>
+                </div>
+                <div class="goal-progress-bar">
+                    <div class="goal-progress-fill" style="width: 78.5%;"></div>
+                </div>
+                <div class="goal-stats">
+                    <div>Avg: 2.8 mi/day</div>
+                    <div>Need: 3.2 mi/day</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weekly Distance Chart -->
+        <div class="tile" style="grid-column: span 2;">
+            <div class="tile-header">Weekly Distance (miles)</div>
+            <div class="weekly-chart">
+                <div class="bar" style="height: 60%;">
+                    <div class="bar-label">4.5</div>
+                </div>
+                <div class="bar" style="height: 80%;">
+                    <div class="bar-label">6.2</div>
+                </div>
+                <div class="bar" style="height: 40%;">
+                    <div class="bar-label">3.1</div>
+                </div>
+                <div class="bar" style="height: 90%;">
+                    <div class="bar-label">6.8</div>
+                </div>
+                <div class="bar" style="height: 30%;">
+                    <div class="bar-label">2.9</div>
+                </div>
+                <div class="bar" style="height: 0%;">
+                    <div class="bar-label">-</div>
+                </div>
+                <div class="bar" style="height: 0%;">
+                    <div class="bar-label">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto refresh every 5 minutes
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 300000);
+    </script>
+</body>
+</html>

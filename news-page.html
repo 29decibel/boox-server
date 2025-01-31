@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Today's News</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 20px;
+            height: calc(100vh - 40px);
+        }
+
+        .news-tile {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .featured {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .category {
+            color: #2563eb;
+            font-weight: bold;
+            font-size: 0.875rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #1f2937;
+        }
+
+        .featured .title {
+            font-size: 2rem;
+            line-height: 1.2;
+        }
+
+        .brief {
+            color: #4b5563;
+            font-size: 0.9375rem;
+            flex-grow: 1;
+        }
+
+        .featured-content {
+            display: flex;
+            gap: 20px;
+            flex-grow: 1;
+        }
+
+        .featured-text {
+            flex: 1;
+        }
+
+        .featured-image {
+            width: 280px;
+            height: 200px;
+            background-color: #e5e7eb;
+            border-radius: 8px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .featured-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="news-grid">
+        <!-- Featured News -->
+        <article class="news-tile featured">
+            <div class="category">Breaking News </div>
+            <h1 class="title">Global Climate Summit Reaches Historic Agreement</h1>
+            <div class="featured-content">
+                <div class="featured-text">
+                    <p class="brief">
+                        World leaders have reached a groundbreaking agreement on climate change, 
+                        setting ambitious targets for carbon reduction and renewable energy adoption. 
+                        The historic deal marks a turning point in global environmental policy and 
+                        cooperation between nations.
+                    </p>
+                </div>
+                <div class="featured-image">
+                    <img src="pic.jpg" alt="Climate Summit">
+                </div>
+            </div>
+        </article>
+
+        <!-- Regular News Tiles -->
+        <article class="news-tile">
+            <div class="category">Technology</div>
+            <h2 class="title">AI Breakthrough in Medical Research</h2>
+            <p class="brief">New AI model shows promising results in early disease detection, potentially revolutionizing preventive healthcare.</p>
+        </article>
+
+        <article class="news-tile">
+            <div class="category">Business</div>
+            <h2 class="title">Market Rally Continues</h2>
+            <p class="brief">Global markets reach new highs as investor confidence grows amid positive economic indicators.</p>
+        </article>
+
+        <article class="news-tile">
+            <div class="category">Sports</div>
+            <h2 class="title">Championship Final Set</h2>
+            <p class="brief">Underdog team makes historic run to reach the finals, setting up dramatic championship matchup.</p>
+        </article>
+
+        <article class="news-tile">
+            <div class="category">Arts</div>
+            <h2 class="title">New Gallery Opening</h2>
+            <p class="brief">Contemporary art space launches with exhibition featuring emerging local artists.</p>
+        </article>
+
+        <article class="news-tile">
+            <div class="category">Science</div>
+            <h2 class="title">Mars Mission Update</h2>
+            <p class="brief">Latest rover discoveries provide new insights into the red planet's geological history.</p>
+        </article>
+    </div>
+        <div style="position: fixed; bottom: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 8px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        Last refreshed: <span id="lastRefresh"></span>
+      <span id="willRefresh"></span>
+    </div>
+    <script src="refresh.js?v=233sdf33333333"></script>
+</body>
+
+</html>

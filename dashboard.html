@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-ink Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: white;
+            height: 100vh;
+            padding: 16px;
+            color: black;
+            overflow: hidden;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 1fr;
+            gap: 16px;
+            height: calc(100vh - 32px);
+            max-height: calc(100vh - 32px);
+        }
+
+        .tile {
+            background: white;
+            border: 2px solid black;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .tile-header {
+            border-bottom: 2px solid black;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .schedule {
+            grid-row: span 2;
+        }
+
+        .event {
+            display: flex;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .event-time {
+            font-weight: bold;
+            min-width: 50px;
+        }
+
+        .tasks {
+            grid-row: span 2;
+        }
+
+        .task-item {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .task-item::before {
+            content: "•";
+            margin-right: 6px;
+        }
+
+        .stock-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid black;
+        }
+
+        .weather-content {
+            text-align: center;
+        }
+
+        .temperature {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 4px 0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            flex: 1;
+        }
+
+        .stat-item {
+            border: 1px solid black;
+            padding: 4px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+        }
+
+        #gregorian-date {
+            font-size: 1rem;
+            font-weight: bold;
+            margin: 4px 0;
+        }
+
+        .lunar-date {
+            font-size: 0.9rem;
+        }
+
+        #current-time {
+            float: right;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-grid">
+        <!-- Schedule -->
+        <div class="tile schedule">
+            <div class="tile-header">
+                Schedule <span id="current-time"></span>
+            </div>
+            <div class="events">
+                <div class="event">
+                    <div class="event-time">09:00</div>
+                    <div>Team Stand-up</div>
+                </div>
+                <div class="event">
+                    <div class="event-time">11:30</div>
+                    <div>Client Meeting</div>
+                </div>
+                <div class="event">
+                    <div class="event-time">14:00</div>
+                    <div>Review</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tasks -->
+        <div class="tile tasks">
+            <div class="tile-header">Tasks</div>
+            <div class="task-list">
+                <div class="task-item">Quarterly report</div>
+                <div class="task-item">Project timeline</div>
+                <div class="task-item">Client proposal</div>
+            </div>
+        </div>
+
+        <!-- Stocks -->
+        <div class="tile">
+            <div class="tile-header">Stocks</div>
+            <div class="stock-content">
+                <div class="stock-item">
+                    <span>NVDA 875.38</span>
+                    <span>▲2.5%</span>
+                </div>
+                <div class="stock-item">
+                    <span>AAPL 182.52</span>
+                    <span>▲1.2%</span>
+                </div>
+                <div class="stock-item">
+                    <span>AMZN 174.42</span>
+                    <span>▼0.8%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weather -->
+        <div class="tile">
+            <div class="tile-header">Irvine</div>
+            <div class="weather-content">
+                <div class="temperature">72°F</div>
+                <div>Sunny</div>
+                <div>65% Humidity</div>
+            </div>
+        </div>
+
+        <!-- Date -->
+        <div class="tile">
+            <div class="tile-header">Date</div>
+            <div style="text-align: center">
+                <div id="gregorian-date"></div>
+                <div class="lunar-date">Dragon - Month 1 Day 15</div>
+            </div>
+        </div>
+
+        <!-- Running -->
+        <div class="tile">
+            <div class="tile-header">Running</div>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-value">15.5</div>
+                    <div class="stat-label">Miles</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">820</div>
+                    <div class="stat-label">Elev.(ft)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">2:45</div>
+                    <div class="stat-label">Hours</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Runs</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = 
+                now.toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    hour12: false 
+                });
+            
+            document.getElementById('gregorian-date').textContent = 
+                now.toLocaleDateString('en-US', { 
+                    weekday: 'short', 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+        }
+
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // Navigate to root and reload every 5 minutes
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 300000);
+    </script>
+</body>
+</html>
